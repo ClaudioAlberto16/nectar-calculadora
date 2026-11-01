@@ -200,6 +200,19 @@
 // URL OFICIAL DE CONEXIÓN CON APPS SCRIPT
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyx7WniBbhUzwB7nJnlt3r3Nz8LwQu_v8vHmDWK2hafZ3au7QBt54j2oD0BZ7eroWWF6A/exec';
 
+// Envía JSON como texto plano para evitar el preflight de application/json.
+// no-cors impide leer la respuesta del servidor; por eso la interfaz no afirma
+// que Google Sheets guardó los datos, solo que el navegador envió la solicitud.
+async function sendToSheets(payload) {
+  return fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+}
+
+
 // DEFINICIÓN DE LAS 8 FASES (4 AVES + 4 PORCINOS)
 const D = {
   m: 'b',
@@ -535,14 +548,16 @@ function desc() {
   ren();
 
   // Enviar descuento directo a Google Sheets en segundo plano
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'descontar', descuentos })
-  }).catch(e => console.error(e));
+  sendToSheets({ action: 'descontar', descuentos })
+    .then(() => {
+      console.info('Solicitud de descuento enviada a Google Sheets.');
+    })
+    .catch(e => {
+      console.error('No se pudo enviar el descuento a Google Sheets:', e);
+      alert('⚠️ La partida quedó registrada en esta aplicación, pero no se pudo enviar a Google Sheets. Revisa tu conexión.');
+    });
 
-  alert('✅ Partida registrada y descontada de bodega (sincronizada con Google Sheets).');
+  alert('✅ Partida registrada en la aplicación. Se está enviando el descuento a Google Sheets; verifica la hoja para confirmar el cambio.');
 }
 
 function revH(idx) {
@@ -562,12 +577,12 @@ function revH(idx) {
   sv();
   ren();
 
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'revertir', devoluciones })
-  }).catch(e => console.error(e));
+  sendToSheets({ action: 'revertir', devoluciones })
+    .then(() => console.info('Solicitud de reversión enviada a Google Sheets.'))
+    .catch(e => {
+      console.error('No se pudo enviar la reversión a Google Sheets:', e);
+      alert('⚠️ La partida se revirtió en esta aplicación, pero no se pudo enviar la devolución a Google Sheets. Revisa tu conexión.');
+    });
 }
 
 function clrH() {
@@ -677,20 +692,15 @@ async function exportToSheets() {
   S.i.forEach(it => { stock_completo[it.n] = it.st; });
 
   try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'actualizar_todo',
-        stock_completo: stock_completo
-      })
+    await sendToSheets({
+      action: 'actualizar_todo',
+      stock_completo: stock_completo
     });
 
-    dot.style.background = '#10b981';
-    txt.textContent = 'Exportado a Drive';
+    dot.style.background = '#f59e0b';
+    txt.textContent = 'Solicitud enviada; verifica la hoja';
     tim.textContent = new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-    alert('✅ Inventario actual exportado y guardado en tu hoja de Google Sheets.');
+    alert('📤 Solicitud de exportación enviada. Por la configuración de seguridad del navegador no es posible confirmar desde aquí que Google Sheets guardó los cambios. Revisa la pestaña Control_Bodega.');
   } catch (err) {
     dot.style.background = '#ef4444';
     txt.textContent = 'Error al exportar a Drive';
