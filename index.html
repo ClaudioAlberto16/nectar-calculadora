@@ -1,283 +1,710 @@
-<!DOCTYPE html><html lang="es-419" class="transparentSkybridgeBackground desktopSkybridge dark" data-theme="dark" style="color-scheme: dark; --safe-area-inset-top: 0px; --safe-area-inset-bottom: 0px; --safe-area-inset-left: 0px; --safe-area-inset-right: 0px;"><head><style>@layer sandbox-defaults{html,body,#root{margin:0;padding:0}}
-    .btn-sync-icon {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s, transform 0.2s;
-      vertical-align: middle;
-      margin-left: 6px;
-    }
-    .btn-sync-icon:active { transform: scale(0.92); }
-    .btn-sync-icon.loading { animation: spin 0.8s linear infinite; background: #f59e0b; pointer-events: none; }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
+<!DOCTYPE html>
+<html lang="es-419">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>NÉCTAR • Sistema Integral (8 Fases)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background: #0f172a; color: #f8fafc; padding-bottom: 80px; font-size: 12px; }
+    header { background: #1e293b; padding: 10px 12px; border-bottom: 2px solid #f59e0b; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+    .brand h1 { font-size: 14px; color: #f59e0b; font-weight: 800; letter-spacing: 0.5px; }
+    .brand p { font-size: 10px; color: #94a3b8; }
+    .header-btns { display: flex; gap: 5px; align-items: center; }
+    .btn-sm { background: #334155; color: #fff; border: none; padding: 6px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-sm:active { transform: scale(0.95); }
+    .btn-import { background: #059669; color: #fff; }
+    .btn-export { background: #2563eb; color: #fff; }
+    .wrap { padding: 10px; max-width: 750px; margin: 0 auto; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
+    .title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #f59e0b; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .sw { display: flex; background: #0f172a; border-radius: 8px; padding: 3px; border: 1px solid #334155; margin-bottom: 10px; }
+    .sw button { flex: 1; padding: 7px 4px; font-size: 11px; font-weight: 700; border-radius: 6px; color: #94a3b8; border: none; background: none; cursor: pointer; }
+    .sw button.on { background: #f59e0b; color: #000; }
+    .filter-sw { display: flex; gap: 6px; margin-bottom: 10px; }
+    .filter-sw button { flex: 1; padding: 6px 4px; font-size: 11px; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid #334155; color: #94a3b8; cursor: pointer; }
+    .filter-sw button.on { background: #334155; color: #f59e0b; border-color: #f59e0b; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media(min-width: 600px) { .grid { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+    .pbox { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px; text-align: center; }
+    .step { display: flex; align-items: center; justify-content: center; gap: 5px; margin: 5px 0; }
+    .sbtn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; }
+    .pinp { width: 56px; text-align: center; background: #1e293b; border: 1px solid #f59e0b; color: #fff; font-weight: 700; font-size: 13px; padding: 4px; border-radius: 5px; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    th, td { padding: 6px 3px; border-bottom: 1px solid #334155; }
+    th { color: #94a3b8; text-align: left; font-size: 10px; }
+    .r { text-align: right; }
+    .tcol { font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, .08); }
+    .trow td { font-weight: 800; border-top: 2px solid #f59e0b; padding-top: 8px; }
+    .ok { background: rgba(16, 185, 129, .2); color: #34d399; padding: 2px 4px; border-radius: 4px; font-size: 9px; }
+    .wn { background: rgba(239, 68, 68, .25); color: #f87171; padding: 2px 4px; border-radius: 4px; font-size: 9px; }
+    .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .mcard { background: #0f172a; padding: 8px; border-radius: 8px; border: 1px solid #334155; }
+    .mval { font-size: 15px; font-weight: 800; margin-top: 2px; }
+    .btn-main { width: 100%; background: #f59e0b; color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; font-size: 13px; margin-top: 8px; cursor: pointer; }
+    .irow { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #334155; }
+    .ism { width: 72px; padding: 5px; text-align: right; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 5px; font-weight: 700; }
+    .nota-in { width: 100%; padding: 9px 10px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 8px; font-size: 12px; margin-top: 10px; }
+    .hcard { background: #0f172a; border: 1px solid #334155; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+    .htop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .hbadges { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0; }
+    .hbg { padding: 3px 6px; border-radius: 5px; font-size: 10px; font-weight: 700; background: #1e293b; border: 1px solid #334155; }
+    .hfoot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #1e293b; padding-top: 6px; margin-top: 6px; font-size: 11px; }
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; border-top: 1px solid #334155; display: flex; padding: 6px 0; z-index: 99; }
+    nav button { flex: 1; background: none; border: none; color: #94a3b8; font-size: 10px; font-weight: 700; cursor: pointer; }
+    nav button.on { color: #f59e0b; }
+    .tab { display: none; }
+    .tab.on { display: block; }
+    .sync-status-bar { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; font-size: 11px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>NÉCTAR • PRODUCCIÓN INTEGRAL</h1>
+    <p>8 Fases: Aves (4) + Porcinos (4)</p>
+  </div>
+  <div class="header-btns">
+    <button class="btn-sm btn-import" onclick="importFromSheets()" title="Descargar precios y stock desde Google Sheets">⬇️ Importar</button>
+    <button class="btn-sm btn-export" onclick="exportToSheets()" title="Subir inventario y precios actuales a Google Sheets">⬆️ Exportar</button>
+    <button class="btn-sm" onclick="zero()" title="Poner en cero cantidades">0</button>
+  </div>
+</header>
 
-</style><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>NÉCTAR • Producción y Costos</title><style>*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}body{background:#0f172a;color:#f8fafc;padding-bottom:80px;font-size:12px}header{background:#1e293b;padding:10px 12px;border-bottom:2px solid #f59e0b;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}.brand h1{font-size:14px;color:#f59e0b}.brand p{font-size:10px;color:#94a3b8}.btn-sm{background:#334155;color:#fff;border:none;padding:6px 9px;border-radius:6px;font-size:11px;font-weight:700}.wrap{padding:10px;max-width:650px;margin:0 auto}.card{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:10px;margin-bottom:10px}.title{font-size:11px;font-weight:700;text-transform:uppercase;color:#f59e0b;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}.sw{display:flex;background:#0f172a;border-radius:8px;padding:3px;border:1px solid #334155;margin-bottom:10px}.sw button{flex:1;padding:7px 4px;font-size:11px;font-weight:700;border-radius:6px;color:#94a3b8;border:none;background:none}.sw button.on{background:#f59e0b;color:#000}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pbox{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px;text-align:center}.step{display:flex;align-items:center;justify-content:center;gap:5px;margin:5px 0}.sbtn{width:28px;height:28px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:16px;font-weight:700}.pinp{width:58px;text-align:center;background:#1e293b;border:1px solid #f59e0b;color:#fff;font-weight:700;font-size:14px;padding:4px;border-radius:5px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{padding:7px 2px;border-bottom:1px solid #334155}th{color:#94a3b8;text-align:left;font-size:10px}.r{text-align:right}.tcol{font-weight:700;color:#f59e0b;background:rgba(245,158,11,.08)}.trow td{font-weight:800;border-top:2px solid #f59e0b;padding-top:8px}.ok{background:rgba(16,185,129,.2);color:#34d399;padding:2px 4px;border-radius:4px;font-size:9px}.wn{background:rgba(239,68,68,.25);color:#f87171;padding:2px 4px;border-radius:4px;font-size:9px}.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.mcard{background:#0f172a;padding:8px;border-radius:8px;border:1px solid #334155}.mval{font-size:15px;font-weight:800;margin-top:2px}.btn-main{width:100%;background:#f59e0b;color:#000;border:none;padding:12px;border-radius:8px;font-weight:800;font-size:13px;margin-top:8px}.irow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #334155}.ism{width:68px;padding:5px;text-align:right;background:#0f172a;border:1px solid #334155;color:#fff;border-radius:5px;font-weight:700}.nota-in{width:100%;padding:9px 10px;background:#0f172a;border:1px solid #475569;color:#fff;border-radius:8px;font-size:12px;margin-top:10px}.hcard{background:#0f172a;border:1px solid #334155;border-left:4px solid #f59e0b;border-radius:8px;padding:10px;margin-bottom:8px}.htop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}.hbadges{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.hbg{padding:3px 7px;border-radius:5px;font-size:10px;font-weight:700;background:#1e293b;border:1px solid #334155}.hfoot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1e293b;padding-top:6px;margin-top:6px;font-size:11px}nav{position:fixed;bottom:0;left:0;right:0;background:#1e293b;border-top:1px solid #334155;display:flex;padding:6px 0;z-index:99}nav button{flex:1;background:none;border:none;color:#94a3b8;font-size:10px;font-weight:700}nav button.on{color:#f59e0b}.tab{display:none}.tab.on{display:block}</style><style>html, body, #root {
-      margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;
-      
-    }
-html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head><body><header><div class="brand"><h1>NÉCTAR • CONCENTRADOS</h1><p>Starter • Grower • Finisher • Ponedoras</p></div><div><button class="btn-sm" onclick="dl()" style="background:#10b981;color:#000;margin-right:4px">⬇ HTML</button><button class="btn-sm" onclick="zero()">Poner 0</button><button id="btn-sync-head" class="btn-sync-icon" onclick="syncDrive()" title="Sincronizar con Google Sheets">🔄</button></div></header><div class="wrap"><div id="t-prod" class="tab on"><div class="card"><div class="title"><span>1. Volumen del Lote</span><span id="tot-kg" style="color:#fff">Total: 12.40 kg</span></div><div class="sw"><button id="bm-b" class="on" onclick="sModo('b')">Por Costales (Sin desperdicio)</button><button id="bm-k" onclick="sModo('k')">Por Kilos Exactos</button></div><div class="grid" id="fases-box"><div class="pbox" style="border-top:3px solid #3b82f6"><div style="font-weight:800;color:#3b82f6">STARTER</div><div style="font-size:10px;color:#94a3b8">Concentrado: 3.50 kg</div><div style="font-size:10px;color:#94a3b8">Agregar 6.5 kg maíz = 10 kg alimento</div><div class="step"><button class="sbtn" onclick="step('s',-1)">-</button><input type="number" class="pinp" value="1" oninput="inp('s',this.value)"><button class="sbtn" onclick="step('s',1)">+</button></div><div id="inf-s" style="font-size:10px;color:#f59e0b;font-weight:700">3.50 kg (1 cost.)</div></div><div class="pbox" style="border-top:3px solid #10b981"><div style="font-weight:800;color:#10b981">GROWER</div><div style="font-size:10px;color:#94a3b8">Concentrado: 3.00 kg</div><div style="font-size:10px;color:#94a3b8">Agregar 7.0 kg maíz = 10 kg alimento</div><div class="step"><button class="sbtn" onclick="step('g',-1)">-</button><input type="number" class="pinp" value="1" oninput="inp('g',this.value)"><button class="sbtn" onclick="step('g',1)">+</button></div><div id="inf-g" style="font-size:10px;color:#f59e0b;font-weight:700">3.00 kg (1 cost.)</div></div><div class="pbox" style="border-top:3px solid #a855f7"><div style="font-weight:800;color:#a855f7">FINISHER</div><div style="font-size:10px;color:#94a3b8">Concentrado: 2.50 kg</div><div style="font-size:10px;color:#94a3b8">Agregar 7.5 kg maíz = 10 kg alimento</div><div class="step"><button class="sbtn" onclick="step('f',-1)">-</button><input type="number" class="pinp" value="1" oninput="inp('f',this.value)"><button class="sbtn" onclick="step('f',1)">+</button></div><div id="inf-f" style="font-size:10px;color:#f59e0b;font-weight:700">2.50 kg (1 cost.)</div></div><div class="pbox" style="border-top:3px solid #f97316"><div style="font-weight:800;color:#f97316">POSTURA 2</div><div style="font-size:10px;color:#94a3b8">Concentrado: 3.40 kg</div><div style="font-size:10px;color:#94a3b8">Agregar 6.6 kg maíz = 10 kg alimento</div><div class="step"><button class="sbtn" onclick="step('p',-1)">-</button><input type="number" class="pinp" value="1" oninput="inp('p',this.value)"><button class="sbtn" onclick="step('p',1)">+</button></div><div id="inf-p" style="font-size:10px;color:#f59e0b;font-weight:700">3.40 kg (1 cost.)</div></div></div><div style="font-size:10px;color:#94a3b8;margin-top:8px">El peso mostrado es de concentrado. Para preparar 10 kg de alimento, agrega el maíz indicado en cada presentación.</div></div><div class="card"><div class="title"><span>2. Orden de Pesaje del Concentrado (Kg)</span></div><div style="overflow-x:auto"><table><thead><tr><th>Insumo</th><th class="r" style="color:#3b82f6">Start</th><th class="r" style="color:#10b981">Grow</th><th class="r" style="color:#a855f7">Finis</th><th class="r" style="color:#f97316">Poned</th><th class="r tcol">TOTAL</th><th class="r">Stock</th></tr></thead><tbody id="tb-pesaje"><tr><td><b>Pasta Soya</b></td><td class="r">2.49</td><td class="r">2.15</td><td class="r">1.72</td><td class="r">2.18</td><td class="r tcol">8.54</td><td class="r"><span class="wn">-8.5</span></td></tr><tr><td><b>Camarón Mol.</b></td><td class="r">0.47</td><td class="r">0.30</td><td class="r">0.10</td><td class="r">0</td><td class="r tcol">0.87</td><td class="r"><span class="ok">6.5</span></td></tr><tr><td><b>E4 Salvado</b></td><td class="r">0.30</td><td class="r">0.30</td><td class="r">0.30</td><td class="r">0</td><td class="r tcol">0.90</td><td class="r"><span class="ok">2.0</span></td></tr><tr><td><b>Aceite Soya</b></td><td class="r">0.19</td><td class="r">0.20</td><td class="r">0.28</td><td class="r">0</td><td class="r tcol">0.66</td><td class="r"><span class="wn">-0.7</span></td></tr><tr><td><b>Melaza Caña</b></td><td class="r">35g</td><td class="r">45g</td><td class="r">50g</td><td class="r">0</td><td class="r tcol">0.13</td><td class="r"><span class="ok">15.0</span></td></tr><tr><td><b>Ajo Polvo</b></td><td class="r">10g</td><td class="r">10g</td><td class="r">10g</td><td class="r">0</td><td class="r tcol">30g</td><td class="r"><span class="ok">1.4</span></td></tr><tr><td><b>Calcio Fino</b></td><td class="r">0</td><td class="r">0</td><td class="r">50g</td><td class="r">0.37</td><td class="r tcol">0.42</td><td class="r"><span class="ok">19.5</span></td></tr><tr><td><b>Calcio Grueso</b></td><td class="r">0</td><td class="r">0</td><td class="r">0</td><td class="r">0.55</td><td class="r tcol">0.55</td><td class="r"><span class="wn">-0.6</span></td></tr><tr><td><b>Aceite vegetal (Ponedoras)</b></td><td class="r">0</td><td class="r">0</td><td class="r">0</td><td class="r">0.10</td><td class="r tcol">0.10</td><td class="r"><span class="wn">-0.1</span></td></tr><tr><td><b>CAREMIX V20</b></td><td class="r">0</td><td class="r">0</td><td class="r">0</td><td class="r">0.20</td><td class="r tcol">0.20</td><td class="r"><span class="wn">-0.2</span></td></tr><tr class="trow"><td>MEZCLA</td><td class="r">3.5</td><td class="r">3.0</td><td class="r">2.5</td><td class="r">3.4</td><td class="r tcol">12.40kg</td><td></td></tr></tbody></table></div></div><div class="card"><div class="title"><span>3. Costos y Registro de Partida</span></div><div style="overflow-x:auto"><table><thead><tr><th>Insumo</th><th class="r">$/kg</th><th class="r" style="color:#3b82f6">Start</th><th class="r" style="color:#10b981">Grow</th><th class="r" style="color:#a855f7">Finis</th><th class="r" style="color:#f97316">Poned</th><th class="r tcol">TOTAL</th></tr></thead><tbody id="tb-costos"><tr><td>Pasta Soya</td><td class="r">$11.00</td><td class="r">$27.39</td><td class="r">$23.65</td><td class="r">$18.87</td><td class="r">$23.98</td><td class="r tcol">$93.89</td></tr><tr><td>Camarón Mol.</td><td class="r">$33.00</td><td class="r">$15.51</td><td class="r">$9.90</td><td class="r">$3.30</td><td class="r">$0.00</td><td class="r tcol">$28.71</td></tr><tr><td>E4 Salvado</td><td class="r">$5.80</td><td class="r">$1.74</td><td class="r">$1.74</td><td class="r">$1.74</td><td class="r">$0.00</td><td class="r tcol">$5.22</td></tr><tr><td>Aceite Soya</td><td class="r">$33.80</td><td class="r">$6.42</td><td class="r">$6.59</td><td class="r">$9.29</td><td class="r">$0.00</td><td class="r tcol">$22.31</td></tr><tr><td>Melaza Caña</td><td class="r">$8.33</td><td class="r">$0.29</td><td class="r">$0.37</td><td class="r">$0.42</td><td class="r">$0.00</td><td class="r tcol">$1.08</td></tr><tr><td>Ajo Polvo</td><td class="r">$30.00</td><td class="r">$0.30</td><td class="r">$0.30</td><td class="r">$0.30</td><td class="r">$0.00</td><td class="r tcol">$0.90</td></tr><tr><td>Calcio Fino</td><td class="r">$7.00</td><td class="r">$0.00</td><td class="r">$0.00</td><td class="r">$0.35</td><td class="r">$2.59</td><td class="r tcol">$2.94</td></tr><tr><td>Calcio Grueso</td><td class="r">$7.00</td><td class="r">$0.00</td><td class="r">$0.00</td><td class="r">$0.00</td><td class="r">$3.85</td><td class="r tcol">$3.85</td></tr><tr><td>Aceite vegetal (Ponedoras)</td><td class="r">$34.19</td><td class="r">$0.00</td><td class="r">$0.00</td><td class="r">$0.00</td><td class="r">$3.42</td><td class="r tcol">$3.42</td></tr><tr><td>CAREMIX V20</td><td class="r">$75.00</td><td class="r">$0.00</td><td class="r">$0.00</td><td class="r">$0.00</td><td class="r">$15.00</td><td class="r tcol">$15.00</td></tr><tr><td>Costales (4)</td><td class="r">$3.50</td><td class="r">$3.50</td><td class="r">$3.50</td><td class="r">$3.50</td><td class="r">$3.50</td><td class="r tcol">$14.00</td></tr><tr class="trow"><td colspan="2">COSTO LOTE</td><td class="r">$55.15</td><td class="r">$46.06</td><td class="r">$37.77</td><td class="r">$52.34</td><td class="r tcol">$191.32</td></tr><tr><td colspan="2" style="color:#3b82f6;font-weight:700">Venta</td><td class="r">$95</td><td class="r">$80</td><td class="r">$75</td><td class="r">$85</td><td class="r tcol">$335.00</td></tr><tr><td colspan="2" style="color:#10b981;font-weight:700">Ganancia</td><td class="r">+$40</td><td class="r">+$34</td><td class="r">+$37</td><td class="r">+$33</td><td class="r tcol">+$143.68</td></tr></tbody></table></div><div class="mgrid"><div class="mcard"><div>Costo Producción</div><div class="mval" id="m-c" style="color:#ef4444">$191.32</div></div><div class="mcard"><div>Venta Cliente</div><div class="mval" id="m-v" style="color:#3b82f6">$335.00</div></div><div class="mcard"><div>Ganancia Libre</div><div class="mval" id="m-g" style="color:#10b981">+$143.68</div></div><div class="mcard"><div>Costales a Usar</div><div class="mval" id="m-b" style="color:#f59e0b">4 pzas</div></div></div><input type="text" id="in-nota" class="nota-in" placeholder="📝 Cliente o Nota de partida (Opcional)..."><button class="btn-main" onclick="desc()">✅ Registrar Partida y Descontar de Bodega</button></div></div><div id="t-his" class="tab"><div class="card"><div class="title"><span>Resumen Acumulado de Costales Hechos</span><button class="btn-sm" style="background:#ef4444;font-size:10px;padding:4px 7px" onclick="clrH()">Vaciar Historial</button></div><div class="grid" id="h-res"><div class="pbox" style="border-top:3px solid #3b82f6"><div style="color:#3b82f6;font-weight:800">STARTER</div><div style="font-size:16px;font-weight:800;margin-top:3px">0 costales</div></div><div class="pbox" style="border-top:3px solid #10b981"><div style="color:#10b981;font-weight:800">GROWER</div><div style="font-size:16px;font-weight:800;margin-top:3px">0 costales</div></div><div class="pbox" style="border-top:3px solid #a855f7"><div style="color:#a855f7;font-weight:800">FINISHER</div><div style="font-size:16px;font-weight:800;margin-top:3px">0 costales</div></div><div class="pbox" style="border-top:3px solid #f97316"><div style="color:#f97316;font-weight:800">POSTURA 2</div><div style="font-size:16px;font-weight:800;margin-top:3px">0 costales</div></div></div><div class="mgrid" id="h-fin"><div class="mcard"><div>Total kg de concentrado producido</div><div class="mval" style="color:#f59e0b">0.0 kg</div></div><div class="mcard"><div>Ganancia Acumulada</div><div class="mval" style="color:#10b981">+$0.00</div></div></div></div><div class="card"><div class="title"><span>Historial de Partidas Registradas</span><span id="h-cnt" style="color:#94a3b8">0 partidas</span></div><div id="h-list"><div style="text-align:center;color:#94a3b8;padding:20px">Aún no hay partidas registradas.</div></div></div></div><div id="t-con" class="tab"><div class="card"><div class="title"><span>Total en Consignación (Todos los Locales)</span></div><div class="grid" id="c-res"><div class="pbox" style="border-top:3px solid #3b82f6"><div style="color:#3b82f6;font-weight:800">STARTER</div><div style="font-size:15px;font-weight:800;margin-top:2px">0 cost.</div></div><div class="pbox" style="border-top:3px solid #10b981"><div style="color:#10b981;font-weight:800">GROWER</div><div style="font-size:15px;font-weight:800;margin-top:2px">0 cost.</div></div><div class="pbox" style="border-top:3px solid #a855f7"><div style="color:#a855f7;font-weight:800">FINISHER</div><div style="font-size:15px;font-weight:800;margin-top:2px">0 cost.</div></div><div class="pbox" style="border-top:3px solid #f97316"><div style="color:#f97316;font-weight:800">POSTURA 2</div><div style="font-size:15px;font-weight:800;margin-top:2px">0 cost.</div></div></div><div class="mgrid" id="c-fin"><div class="mcard"><div>Total Costales en Calle</div><div class="mval" style="color:#f59e0b">0 pzas</div></div><div class="mcard"><div>Valor en Consignación</div><div class="mval" style="color:#10b981">$0</div></div></div></div><div class="card"><div class="title"><span>Agregar Establecimiento</span></div><div style="display:flex;gap:6px"><input type="text" id="in-est" class="nota-in" style="margin-top:0;flex:1" placeholder="🏪 Nombre del local (ej. Baños JG)..."><button class="btn-main" style="width:auto;margin-top:0;padding:0 14px" onclick="addEst()">+ Agregar</button></div></div><div class="card"><div class="title"><span>Costales Actuales por Establecimiento</span></div><div id="c-list"><div class="hcard" style="border-left-color:#3b82f6"><div class="htop"><div><div style="font-weight:800;font-size:14px;color:#fff">🏪 Baños JG</div><div style="font-size:10px;color:#94a3b8">En piso: <b style="color:#f59e0b">0 costales</b> • Valor: <b style="color:#10b981">$0</b></div></div><button class="btn-sm" style="background:#334155;font-size:10px;padding:4px 7px" onclick="delEst(0)">🗑</button></div><div class="grid" style="margin-top:8px"><div class="pbox" style="padding:6px;border-top:2px solid #3b82f6"><div style="color:#3b82f6;font-weight:700;font-size:10px">STARTER (3.5kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC(0,'s',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">0</span><button class="sbtn" onclick="modC(0,'s',1)">+</button></div></div><div class="pbox" style="padding:6px;border-top:2px solid #10b981"><div style="color:#10b981;font-weight:700;font-size:10px">GROWER (3kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC(0,'g',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">0</span><button class="sbtn" onclick="modC(0,'g',1)">+</button></div></div><div class="pbox" style="padding:6px;border-top:2px solid #a855f7"><div style="color:#a855f7;font-weight:700;font-size:10px">FINISHER (2.5kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC(0,'f',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">0</span><button class="sbtn" onclick="modC(0,'f',1)">+</button></div></div><div class="pbox" style="padding:6px;border-top:2px solid #f97316"><div style="color:#f97316;font-weight:700;font-size:10px">POSTURA 2 (3.4kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC(0,'p',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">0</span><button class="sbtn" onclick="modC(0,'p',1)">+</button></div></div></div></div></div></div><div class="card"><div class="title"><span>Historial de Movimientos Consignación</span><button class="btn-sm" style="background:#ef4444;font-size:10px;padding:4px 7px" onclick="clrCL()">Limpiar</button></div><div id="c-log"><div style="text-align:center;color:#94a3b8;padding:10px">Sin movimientos aún.</div></div></div></div><div id="t-inv" class="tab"><div class="card"><div class="title"><span>Inventario Materia Prima (Kg)</span></div><div id="l-mp"><div class="irow"><span>Pasta Soya</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[0].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Camarón Mol.</span><div><input type="number" step="0.1" class="ism" value="6.5" onchange="S.i[1].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>E4 Salvado</span><div><input type="number" step="0.1" class="ism" value="2" onchange="S.i[2].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Aceite Soya</span><div><input type="number" step="0.1" class="ism" value="-1" onchange="S.i[3].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Melaza Caña</span><div><input type="number" step="0.1" class="ism" value="15" onchange="S.i[4].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Ajo Polvo</span><div><input type="number" step="0.1" class="ism" value="1.45" onchange="S.i[5].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Calcio Fino</span><div><input type="number" step="0.1" class="ism" value="19.5" onchange="S.i[6].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Calcio Grueso</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[7].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>SANAMIN Aves</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[8].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Fosfato 21% (precio pendiente)</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[9].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Sal (NaCl)</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[10].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Bicarbonato</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[11].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>Aceite vegetal (Ponedoras)</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[12].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div><div class="irow"><span>CAREMIX V20</span><div><input type="number" step="0.1" class="ism" value="0" onchange="S.i[13].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div></div></div><div class="card"><div class="title"><span>Inventario Empaque y Etiquetas</span></div><div id="l-emp"><div class="irow"><span>Costales Normales</span><div><input type="number" class="ism" value="12" onchange="S.e['cn']=parseInt(this.value)||0;sv()"> pza</div></div><div class="irow"><span>Costales Grandes x2</span><div><input type="number" class="ism" value="44" onchange="S.e['cg']=parseInt(this.value)||0;sv()"> pza</div></div><div class="irow"><span>Etiqueta Starter</span><div><input type="number" class="ism" value="9" onchange="S.e['es']=parseInt(this.value)||0;sv()"> pza</div></div><div class="irow"><span>Etiqueta Grower</span><div><input type="number" class="ism" value="6" onchange="S.e['eg']=parseInt(this.value)||0;sv()"> pza</div></div><div class="irow"><span>Etiqueta Finisher</span><div><input type="number" class="ism" value="1" onchange="S.e['ef']=parseInt(this.value)||0;sv()"> pza</div></div><div class="irow"><span>Etiqueta Ponedoras</span><div><input type="number" class="ism" value="10" onchange="S.e['ep']=parseInt(this.value)||0;sv()"> pza</div></div></div></div></div><div id="t-cfg" class="tab">
-<div class="card">
-  <div class="title">
-    <span>☁️ Sincronización Google Sheets (Drive)</span>
-    <button class="btn-sm" style="background:#10b981;color:#000;font-size:10px;padding:4px 8px" onclick="syncDrive()">Sincronizar Ahora</button>
-  </div>
-  <div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px 10px;margin-bottom:8px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <span><span id="syncDot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#94a3b8;margin-right:5px"></span><span id="syncTxt">Modo local / Sin enlace</span></span>
-      <span id="syncTime" style="color:#94a3b8;font-size:9px"></span>
+<div class="wrap">
+  <!-- BARRA DE ESTADO DE CONEXIÓN CON DRIVE -->
+  <div class="sync-status-bar">
+    <div>
+      <span id="syncDot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#10b981;margin-right:6px"></span>
+      <span id="syncTxt">Google Sheets conectado</span>
     </div>
-    <input type="text" id="in-sheet-url" class="nota-in" style="margin-top:4px;font-size:11px" 
-           placeholder="Pega aquí la URL /exec de Apps Script o CSV de Google Sheets..." 
-           onchange="saveSheetUrl(this.value)">
+    <div id="syncTime" style="color:#94a3b8;font-size:10px">Listo</div>
   </div>
-  <div style="font-size:10px;color:#94a3b8">
-    Actualiza costos y precios desde tu Google Drive. Cualquier dispositivo que abra la app leerá los mismos precios.
+
+  <!-- TAB 1: FABRICACIÓN Y LOTES -->
+  <div id="t-prod" class="tab on">
+    <div class="card">
+      <div class="title">
+        <span>1. Selección y Volumen del Lote</span>
+        <span id="tot-kg" style="color:#fff">Total: 0.00 kg</span>
+      </div>
+
+      <!-- FILTRO DE ESPECIES -->
+      <div class="filter-sw">
+        <button id="flt-all" class="on" onclick="setFilter('all')">🐾 Todas (8)</button>
+        <button id="flt-aves" onclick="setFilter('aves')">🐔 Aves (4)</button>
+        <button id="flt-porc" onclick="setFilter('porc')">🐷 Porcinos (4)</button>
+      </div>
+
+      <div class="sw">
+        <button id="bm-b" class="on" onclick="sModo('b')">Por Costales (Sin desperdicio)</button>
+        <button id="bm-k" onclick="sModo('k')">Por Kilos Exactos</button>
+      </div>
+
+      <div class="grid" id="fases-box"></div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:8px">
+        * Cada presentación rinde exactamente 10 kg de alimento balanceado al sumar el maíz correspondiente indicado en la tarjeta.
+      </div>
+    </div>
+
+    <!-- ORDEN DE PESAJE CONSOLIDADA -->
+    <div class="card">
+      <div class="title"><span>2. Orden de Pesaje Consolidada (Kg / g)</span></div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead id="th-pesaje"></thead>
+          <tbody id="tb-pesaje"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COSTOS Y RESUMEN FINANCIERO -->
+    <div class="card">
+      <div class="title"><span>3. Costos de Fabricación y Registro</span></div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead id="th-costos"></thead>
+          <tbody id="tb-costos"></tbody>
+        </table>
+      </div>
+      <div class="mgrid">
+        <div class="mcard"><div>Costo Producción</div><div class="mval" id="m-c" style="color:#ef4444">$0.00</div></div>
+        <div class="mcard"><div>Venta Cliente</div><div class="mval" id="m-v" style="color:#3b82f6">$0.00</div></div>
+        <div class="mcard"><div>Ganancia Libre</div><div class="mval" id="m-g" style="color:#10b981">+$0.00</div></div>
+        <div class="mcard"><div>Costales a Usar</div><div class="mval" id="m-b" style="color:#f59e0b">0 pzas</div></div>
+      </div>
+      <input type="text" id="in-nota" class="nota-in" placeholder="📝 Cliente, lote o nota de partida...">
+      <button class="btn-main" onclick="desc()">✅ Registrar Partida y Descontar de Bodega</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: HISTORIAL DE FABRICACIÓN -->
+  <div id="t-his" class="tab">
+    <div class="card">
+      <div class="title">
+        <span>Resumen Acumulado de Producción</span>
+        <button class="btn-sm" style="background:#ef4444;font-size:10px;padding:4px 7px" onclick="clrH()">Vaciar Historial</button>
+      </div>
+      <div class="grid" id="h-res"></div>
+      <div class="mgrid" id="h-fin"></div>
+    </div>
+    <div class="card">
+      <div class="title">
+        <span>Historial de Partidas Registradas</span>
+        <span id="h-cnt" style="color:#94a3b8">0 partidas</span>
+      </div>
+      <div id="h-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: BODEGA Y EXISTENCIAS -->
+  <div id="t-inv" class="tab">
+    <div class="card">
+      <div class="title">
+        <span>Existencias de Materia Prima en Bodega</span>
+        <button class="btn-sm btn-export" onclick="exportToSheets()">Guardar en Drive</button>
+      </div>
+      <div id="l-mp"></div>
+    </div>
+    <div class="card">
+      <div class="title"><span>Inventario de Empaques</span></div>
+      <div id="l-emp"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: PRECIOS Y COSTOS -->
+  <div id="t-cfg" class="tab">
+    <div class="card">
+      <div class="title">
+        <span>Precios de Materia Prima ($ MXN / kg)</span>
+        <button class="btn-sm btn-export" onclick="exportToSheets()">Subir a Drive</button>
+      </div>
+      <div id="l-pre"></div>
+    </div>
+    <div class="card">
+      <div class="title"><span>Precios de Venta Oficiales ($ MXN por Costal)</span></div>
+      <div id="l-ven"></div>
+      <button class="btn-sm" style="width:100%;margin-top:10px;padding:10px" onclick="rst()">Restaurar Valores de Fábrica</button>
+    </div>
   </div>
 </div>
-<div class="card"><div class="title"><span>Precios por Kg ($ MXN)</span></div><div class="sw"><button onclick="perf(0)">Precios base vigentes</button><button onclick="perf(1)">Precios base vigentes</button></div><div id="l-pre"><div class="irow"><span>Pasta Soya</span><div>$ <input type="number" step="0.05" class="ism" value="11" onchange="S.i[0].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Camarón Mol.</span><div>$ <input type="number" step="0.05" class="ism" value="33" onchange="S.i[1].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>E4 Salvado</span><div>$ <input type="number" step="0.05" class="ism" value="5.8" onchange="S.i[2].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Aceite Soya</span><div>$ <input type="number" step="0.05" class="ism" value="33.8" onchange="S.i[3].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Melaza Caña</span><div>$ <input type="number" step="0.05" class="ism" value="8.33" onchange="S.i[4].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Ajo Polvo</span><div>$ <input type="number" step="0.05" class="ism" value="30" onchange="S.i[5].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Calcio Fino</span><div>$ <input type="number" step="0.05" class="ism" value="7" onchange="S.i[6].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Calcio Grueso</span><div>$ <input type="number" step="0.05" class="ism" value="7" onchange="S.i[7].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>SANAMIN Aves</span><div>$ <input type="number" step="0.05" class="ism" value="12.5" onchange="S.i[8].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Fosfato 21% (precio pendiente)</span><div>$ <input type="number" step="0.05" class="ism" value="0" onchange="S.i[9].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Sal (NaCl)</span><div>$ <input type="number" step="0.05" class="ism" value="14" onchange="S.i[10].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Bicarbonato</span><div>$ <input type="number" step="0.05" class="ism" value="20" onchange="S.i[11].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>Aceite vegetal (Ponedoras)</span><div>$ <input type="number" step="0.05" class="ism" value="34.19" onchange="S.i[12].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span>CAREMIX V20</span><div>$ <input type="number" step="0.05" class="ism" value="75" onchange="S.i[13].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div><div class="irow"><span style="color:#f59e0b">Costal Empaque</span><div>$ <input type="number" step="0.05" class="ism" value="3.5" onchange="S.c=parseFloat(this.value)||0;sv();ren()"> /pza</div></div></div></div><div class="card"><div class="title"><span>Precio de Venta por Costal</span></div><div id="l-ven"><div class="irow"><span>STARTER (3.5 kg)</span><div>$ <input type="number" class="ism" value="95" onchange="S.f['s'].v=parseFloat(this.value)||0;sv();ren()"></div></div><div class="irow"><span>GROWER (3 kg)</span><div>$ <input type="number" class="ism" value="80" onchange="S.f['g'].v=parseFloat(this.value)||0;sv();ren()"></div></div><div class="irow"><span>FINISHER (2.5 kg)</span><div>$ <input type="number" class="ism" value="75" onchange="S.f['f'].v=parseFloat(this.value)||0;sv();ren()"></div></div><div class="irow"><span>POSTURA 2 (3.4 kg)</span><div>$ <input type="number" class="ism" value="85" onchange="S.f['p'].v=parseFloat(this.value)||0;sv();ren()"></div></div></div><button class="btn-sm" style="width:100%;margin-top:10px;padding:10px" onclick="rst()">Restaurar Valores Originales</button></div></div></div><nav><button id="n-prod" class="on" onclick="tab('prod')">⚖️ Lotes</button><button id="n-his" onclick="tab('his')">📜 Partidas</button><button id="n-con" onclick="tab('con')">🏪 Consigna</button><button id="n-inv" onclick="tab('inv')">📦 Bodega</button><button id="n-cfg" onclick="tab('cfg')">⚙️ Precios</button></nav><script>const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyx7WniBbhUzwB7nJnlt3r3Nz8LwQu_v8vHmDWK2hafZ3au7QBt54j2oD0BZ7eroWWF6A/exec';
-var D={m:'b',q:{s:3.5,g:3,f:2.5,p:3.4},c:3.5,sheetUrl:DEFAULT_APPS_SCRIPT_URL,f:{s:{n:'STARTER',b:3.5,m:6.5,v:95,cl:'#3b82f6'},g:{n:'GROWER',b:3,m:7,v:80,cl:'#10b981'},f:{n:'FINISHER',b:2.5,m:7.5,v:75,cl:'#a855f7'},p:{n:'POSTURA 2',b:3.4,m:6.6,v:85,cl:'#f97316'}},i:[
-{n:'Pasta Soya',p:11,p0:11,p1:11,st:0,r:{s:71.1429,g:71.6667,f:68.6,p:64.1176}},
-{n:'Camarón Mol.',p:33,p0:33,p1:33,st:6.5,r:{s:13.4286,g:10,f:4,p:0}},
-{n:'E4 Salvado',p:5.8,p0:5.8,p1:5.8,st:2,r:{s:8.5714,g:10,f:12,p:0}},
-{n:'Aceite Soya',p:33.8,p0:33.8,p1:33.8,st:-1,r:{s:5.4286,g:6.5,f:11,p:0}},
-{n:'Melaza Caña',p:8.33,p0:8.33,p1:8.33,st:15,r:{s:1,g:1.5,f:2,p:0}},
-{n:'Ajo Polvo',p:30,p0:30,p1:30,st:1.45,r:{s:0.2857,g:0.3333,f:0.4,p:0}},
-{n:'Calcio Fino',p:7,p0:7,p1:7,st:19.5,r:{s:0,g:0,f:2,p:10.8824}},
-{n:'Calcio Grueso',p:7,p0:7,p1:7,st:0,r:{s:0,g:0,f:0,p:16.1765}},
-{n:'SANAMIN Aves',p:12.5,p0:12.5,p1:12.5,st:0,r:{s:0,g:0,f:0,p:0}},
-{n:'Fosfato 21% (precio pendiente)',p:0,p0:0,p1:0,st:0,r:{s:0,g:0,f:0,p:0}},
-{n:'Sal (NaCl)',p:14,p0:14,p1:14,st:0,r:{s:0,g:0,f:0,p:0}},
-{n:'Bicarbonato',p:20,p0:20,p1:20,st:0,r:{s:0,g:0,f:0,p:0}},
-{n:'Aceite vegetal (Ponedoras)',p:34.19,p0:34.19,p1:34.19,st:0,r:{s:0,g:0,f:0,p:2.9412}},
-{n:'CAREMIX V20',p:75,p0:75,p1:75,st:0,r:{s:0,g:0,f:0,p:5.8824}}
-],e:{cn:12,cg:44,es:9,eg:6,ef:1,ep:10},h:[],cs:[{n:'Baños JG',s:0,g:0,f:0,p:0}],cl:[]};var S=JSON.parse(JSON.stringify(D));try{var g=localStorage.getItem('nec_v7')||localStorage.getItem('nec_v6')||localStorage.getItem('nec_v5');if(g){var P=JSON.parse(g);if(P&&P.f&&P.f.p){S.h=P.h||[];S.cs=P.cs||[{n:'Baños JG',s:0,g:0,f:0,p:0}];S.cl=P.cl||[];S.e=P.e||JSON.parse(JSON.stringify(D.e));S.m=P.m||'b';var oldByName={};(P.i||[]).forEach(function(it){oldByName[it.n]=it});S.i.forEach(function(it){var oi=oldByName[it.n];if(oi&&typeof oi.st==='number')it.st=oi.st});}}}catch(e){}function sv(){try{localStorage.setItem('nec_v7',JSON.stringify(S))}catch(e){}}function sModo(m){S.m=m;document.getElementById('bm-b').className=m=='b'?'on':'';document.getElementById('bm-k').className=m=='k'?'on':'';ren()}function step(k,d){var b=S.f[k].b;if(S.m=='b'){var n=Math.max(0,Math.round(S.q[k]/b)+d);S.q[k]=+(n*b).toFixed(2)}else{S.q[k]=Math.max(0,+(S.q[k]+d*0.5).toFixed(2))}sv();ren()}function inp(k,v){var x=parseFloat(v)||0;S.q[k]=S.m=='b'?+(x*S.f[k].b).toFixed(2):x;sv();ren(1)}function zero(){S.q={s:0,g:0,f:0,p:0};sv();ren()}function fw(w){return w<=0.0001?'0':w<0.1?(w*1000).toFixed(0)+'g':w.toFixed(2)}var curFin={c:0,v:0,g:0};function ren(noBox){var ks=['s','g','f','p'];if(!noBox){var hb='';for(var j=0;j<4;j++){var k=ks[j],f=S.f[k],val=S.m=='b'?+(S.q[k]/f.b).toFixed(2):S.q[k],nb=S.q[k]>0?Math.ceil((S.q[k]-0.001)/f.b):0;hb+='<div class="pbox" style="border-top:3px solid '+f.cl+'"><div style="font-weight:800;color:'+f.cl+'">'+f.n+'</div><div style="font-size:10px;color:#94a3b8">Concentrado: '+f.b.toFixed(2)+' kg</div><div style="font-size:10px;color:#94a3b8">Agregar '+f.m.toFixed(1)+' kg maíz = 10 kg alimento</div><div class="step"><button class="sbtn" onclick="step(\''+k+'\',-1)">-</button><input type="number" class="pinp" value="'+val+'" oninput="inp(\''+k+'\',this.value)"><button class="sbtn" onclick="step(\''+k+'\',1)">+</button></div><div id="inf-'+k+'" style="font-size:10px;color:#f59e0b;font-weight:700">'+S.q[k].toFixed(2)+' kg ('+nb+' cost.)</div></div>'}document.getElementById('fases-box').innerHTML=hb}else{for(var j=0;j<4;j++){var k=ks[j],f=S.f[k],nb=S.q[k]>0?Math.ceil((S.q[k]-0.001)/f.b):0;document.getElementById('inf-'+k).textContent=S.q[k].toFixed(2)+' kg ('+nb+' cost.)'}}var tKg=S.q.s+S.q.g+S.q.f+S.q.p;document.getElementById('tot-kg').textContent='Total: '+tKg.toFixed(2)+' kg';var hp='',hc='',cs={s:0,g:0,f:0,p:0};for(var i=0;i<S.i.length;i++){var it=S.i[i],rs=S.q.s*it.r.s/100,rg=S.q.g*it.r.g/100,rf=S.q.f*it.r.f/100,rp=S.q.p*it.r.p/100,rt=rs+rg+rf+rp;var $s=rs*it.p,$g=rg*it.p,$f=rf*it.p,$p=rp*it.p,$t=$s+$g+$f+$p;cs.s+=$s;cs.g+=$g;cs.f+=$f;cs.p+=$p;if(rt>0.0001||tKg==0){var fl=rt>it.st&&rt>0,bg=fl?'<span class="wn">-'+(rt-Math.max(0,it.st)).toFixed(1)+'</span>':'<span class="ok">'+it.st.toFixed(1)+'</span>';hp+='<tr><td><b>'+it.n+'</b></td><td class="r">'+fw(rs)+'</td><td class="r">'+fw(rg)+'</td><td class="r">'+fw(rf)+'</td><td class="r">'+fw(rp)+'</td><td class="r tcol">'+fw(rt)+'</td><td class="r">'+bg+'</td></tr>';hc+='<tr><td>'+it.n+'</td><td class="r">$'+it.p.toFixed(2)+'</td><td class="r">$'+$s.toFixed(2)+'</td><td class="r">$'+$g.toFixed(2)+'</td><td class="r">$'+$f.toFixed(2)+'</td><td class="r">$'+$p.toFixed(2)+'</td><td class="r tcol">$'+$t.toFixed(2)+'</td></tr>'}}hp+='<tr class="trow"><td>MEZCLA</td><td class="r">'+S.q.s.toFixed(1)+'</td><td class="r">'+S.q.g.toFixed(1)+'</td><td class="r">'+S.q.f.toFixed(1)+'</td><td class="r">'+S.q.p.toFixed(1)+'</td><td class="r tcol">'+tKg.toFixed(2)+'kg</td><td></td></tr>';document.getElementById('tb-pesaje').innerHTML=hp;var bs=S.q.s>0?Math.ceil((S.q.s-0.001)/S.f.s.b):0,bg=S.q.g>0?Math.ceil((S.q.g-0.001)/S.f.g.b):0,bf=S.q.f>0?Math.ceil((S.q.f-0.001)/S.f.f.b):0,bp=S.q.p>0?Math.ceil((S.q.p-0.001)/S.f.p.b):0,bt=bs+bg+bf+bp;var es=bs*S.c,eg=bg*S.c,ef=bf*S.c,ep=bp*S.c,et=es+eg+ef+ep;var ls=cs.s+es,lg=cs.g+eg,lf=cs.f+ef,lp=cs.p+ep,lt=ls+lg+lf+lp;var vs=(S.q.s/S.f.s.b)*S.f.s.v,vg=(S.q.g/S.f.g.b)*S.f.g.v,vf=(S.q.f/S.f.f.b)*S.f.f.v,vp=(S.q.p/S.f.p.b)*S.f.p.v,vt=vs+vg+vf+vp;curFin={c:lt,v:vt,g:vt-lt};hc+='<tr><td>Costales ('+bt+')</td><td class="r">$'+S.c.toFixed(2)+'</td><td class="r">$'+es.toFixed(2)+'</td><td class="r">$'+eg.toFixed(2)+'</td><td class="r">$'+ef.toFixed(2)+'</td><td class="r">$'+ep.toFixed(2)+'</td><td class="r tcol">$'+et.toFixed(2)+'</td></tr><tr class="trow"><td colspan="2">COSTO LOTE</td><td class="r">$'+ls.toFixed(2)+'</td><td class="r">$'+lg.toFixed(2)+'</td><td class="r">$'+lf.toFixed(2)+'</td><td class="r">$'+lp.toFixed(2)+'</td><td class="r tcol">$'+lt.toFixed(2)+'</td></tr><tr><td colspan="2" style="color:#3b82f6;font-weight:700">Venta</td><td class="r">$'+vs.toFixed(0)+'</td><td class="r">$'+vg.toFixed(0)+'</td><td class="r">$'+vf.toFixed(0)+'</td><td class="r">$'+vp.toFixed(0)+'</td><td class="r tcol">$'+vt.toFixed(2)+'</td></tr><tr><td colspan="2" style="color:#10b981;font-weight:700">Ganancia</td><td class="r">+$'+(vs-ls).toFixed(0)+'</td><td class="r">+$'+(vg-lg).toFixed(0)+'</td><td class="r">+$'+(vf-lf).toFixed(0)+'</td><td class="r">+$'+(vp-lp).toFixed(0)+'</td><td class="r tcol">+$'+(vt-lt).toFixed(2)+'</td></tr>';document.getElementById('tb-costos').innerHTML=hc;document.getElementById('m-c').textContent='$'+lt.toFixed(2);document.getElementById('m-v').textContent='$'+vt.toFixed(2);document.getElementById('m-g').textContent='+$'+(vt-lt).toFixed(2);document.getElementById('m-b').textContent=bt+' pzas';var hmp='',hpr='';for(var i=0;i<S.i.length;i++){var it=S.i[i];hmp+='<div class="irow"><span>'+it.n+'</span><div><input type="number" step="0.1" class="ism" value="'+it.st+'" onchange="S.i['+i+'].st=parseFloat(this.value)||0;sv();ren()"> kg</div></div>';hpr+='<div class="irow"><span>'+it.n+'</span><div>$ <input type="number" step="0.05" class="ism" value="'+it.p+'" onchange="S.i['+i+'].p=parseFloat(this.value)||0;sv();ren()"> /kg</div></div>'}hpr+='<div class="irow"><span style="color:#f59e0b">Costal Empaque</span><div>$ <input type="number" step="0.05" class="ism" value="'+S.c+'" onchange="S.c=parseFloat(this.value)||0;sv();ren()"> /pza</div></div>';document.getElementById('l-mp').innerHTML=hmp;document.getElementById('l-pre').innerHTML=hpr;var el=[['cn','Costales Normales'],['cg','Costales Grandes x2'],['es','Etiqueta Starter'],['eg','Etiqueta Grower'],['ef','Etiqueta Finisher'],['ep','Etiqueta Ponedoras']],he='';for(var i=0;i<el.length;i++){var k=el[i][0];he+='<div class="irow"><span>'+el[i][1]+'</span><div><input type="number" class="ism" value="'+S.e[k]+'" onchange="S.e[\''+k+'\']=parseInt(this.value)||0;sv()"> pza</div></div>'}document.getElementById('l-emp').innerHTML=he;var hv='';for(var j=0;j<4;j++){var k=ks[j],f=S.f[k];hv+='<div class="irow"><span>'+f.n+' ('+f.b+' kg)</span><div>$ <input type="number" class="ism" value="'+f.v+'" onchange="S.f[\''+k+'\'].v=parseFloat(this.value)||0;sv();ren()"></div></div>'}document.getElementById('l-ven').innerHTML=hv;renH();renC()}function renH(){if(!S.h)S.h=[];var ts={s:0,g:0,f:0,p:0,kg:0,c:0,v:0,u:0},hl='';for(var i=0;i<S.h.length;i++){var x=S.h[i];ts.s+=x.bs;ts.g+=x.bg;ts.f+=x.bf;ts.p+=x.bp;ts.kg+=x.tKg;ts.c+=x.c;ts.v+=x.v;ts.u+=x.u;var bgs='';if(x.bs>0)bgs+='<span class="hbg" style="color:#3b82f6">Starter: '+x.bs+' cost. ('+x.qs+'kg)</span>';if(x.bg>0)bgs+='<span class="hbg" style="color:#10b981">Grower: '+x.bg+' cost. ('+x.qg+'kg)</span>';if(x.bf>0)bgs+='<span class="hbg" style="color:#a855f7">Finisher: '+x.bf+' cost. ('+x.qf+'kg)</span>';if(x.bp>0)bgs+='<span class="hbg" style="color:#f97316">Ponedoras: '+x.bp+' cost. ('+x.qp+'kg)</span>';hl+='<div class="hcard"><div class="htop"><div><div style="font-weight:800;font-size:13px;color:#f59e0b">'+x.nt+'</div><div style="font-size:10px;color:#94a3b8">'+x.dt+'</div></div><button class="btn-sm" style="background:#334155;font-size:10px;padding:4px 7px" onclick="revH('+i+')">↩ Revertir</button></div><div class="hbadges">'+bgs+'</div><div class="hfoot"><span>Total: <b>'+x.tKg.toFixed(1)+' kg</b> ('+(x.bs+x.bg+x.bf+x.bp)+' cost.)</span><span>Costo: <b style="color:#ef4444">$'+x.c.toFixed(0)+'</b> | Ganancia: <b style="color:#10b981">+$'+x.u.toFixed(0)+'</b></span></div></div>'}if(!S.h.length)hl='<div style="text-align:center;color:#94a3b8;padding:20px">Aún no hay partidas registradas.</div>';document.getElementById('h-list').innerHTML=hl;document.getElementById('h-cnt').textContent=S.h.length+' partida'+(S.h.length==1?'':'s');document.getElementById('h-res').innerHTML='<div class="pbox" style="border-top:3px solid #3b82f6"><div style="color:#3b82f6;font-weight:800">STARTER</div><div style="font-size:16px;font-weight:800;margin-top:3px">'+ts.s+' costales</div></div><div class="pbox" style="border-top:3px solid #10b981"><div style="color:#10b981;font-weight:800">GROWER</div><div style="font-size:16px;font-weight:800;margin-top:3px">'+ts.g+' costales</div></div><div class="pbox" style="border-top:3px solid #a855f7"><div style="color:#a855f7;font-weight:800">FINISHER</div><div style="font-size:16px;font-weight:800;margin-top:3px">'+ts.f+' costales</div></div><div class="pbox" style="border-top:3px solid #f97316"><div style="color:#f97316;font-weight:800">POSTURA 2</div><div style="font-size:16px;font-weight:800;margin-top:3px">'+ts.p+' costales</div></div>';document.getElementById('h-fin').innerHTML='<div class="mcard"><div>Total kg de concentrado producido</div><div class="mval" style="color:#f59e0b">'+ts.kg.toFixed(1)+' kg</div></div><div class="mcard"><div>Ganancia Acumulada</div><div class="mval" style="color:#10b981">+$'+ts.u.toFixed(2)+'</div></div>'}function renC(){if(!S.cs)S.cs=[];if(!S.cl)S.cl=[];var ts={s:0,g:0,f:0,p:0,b:0,v:0},cl='';for(var i=0;i<S.cs.length;i++){var x=S.cs[i],tb=x.s+x.g+x.f+x.p,tv=x.s*S.f.s.v+x.g*S.f.g.v+x.f*S.f.f.v+x.p*S.f.p.v;ts.s+=x.s;ts.g+=x.g;ts.f+=x.f;ts.p+=x.p;ts.b+=tb;ts.v+=tv;cl+='<div class="hcard" style="border-left-color:#3b82f6"><div class="htop"><div><div style="font-weight:800;font-size:14px;color:#fff">🏪 '+x.n+'</div><div style="font-size:10px;color:#94a3b8">En piso: <b style="color:#f59e0b">'+tb+' costales</b> • Valor: <b style="color:#10b981">$'+tv.toFixed(0)+'</b></div></div><button class="btn-sm" style="background:#334155;font-size:10px;padding:4px 7px" onclick="delEst('+i+')">🗑</button></div><div class="grid" style="margin-top:8px"><div class="pbox" style="padding:6px;border-top:2px solid #3b82f6"><div style="color:#3b82f6;font-weight:700;font-size:10px">STARTER (3.5kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC('+i+',\'s\',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">'+x.s+'</span><button class="sbtn" onclick="modC('+i+',\'s\',1)">+</button></div></div><div class="pbox" style="padding:6px;border-top:2px solid #10b981"><div style="color:#10b981;font-weight:700;font-size:10px">GROWER (3kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC('+i+',\'g\',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">'+x.g+'</span><button class="sbtn" onclick="modC('+i+',\'g\',1)">+</button></div></div><div class="pbox" style="padding:6px;border-top:2px solid #a855f7"><div style="color:#a855f7;font-weight:700;font-size:10px">FINISHER (2.5kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC('+i+',\'f\',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">'+x.f+'</span><button class="sbtn" onclick="modC('+i+',\'f\',1)">+</button></div></div><div class="pbox" style="padding:6px;border-top:2px solid #f97316"><div style="color:#f97316;font-weight:700;font-size:10px">POSTURA 2 (3.4kg)</div><div class="step" style="margin:4px 0"><button class="sbtn" onclick="modC('+i+',\'p\',-1)">-</button><span style="font-size:15px;font-weight:800;width:32px;display:inline-block">'+x.p+'</span><button class="sbtn" onclick="modC('+i+',\'p\',1)">+</button></div></div></div></div>'}if(!S.cs.length)cl='<div style="text-align:center;color:#94a3b8;padding:15px">Agrega un establecimiento arriba para empezar.</div>';document.getElementById('c-list').innerHTML=cl;document.getElementById('c-res').innerHTML='<div class="pbox" style="border-top:3px solid #3b82f6"><div style="color:#3b82f6;font-weight:800">STARTER</div><div style="font-size:15px;font-weight:800;margin-top:2px">'+ts.s+' cost.</div></div><div class="pbox" style="border-top:3px solid #10b981"><div style="color:#10b981;font-weight:800">GROWER</div><div style="font-size:15px;font-weight:800;margin-top:2px">'+ts.g+' cost.</div></div><div class="pbox" style="border-top:3px solid #a855f7"><div style="color:#a855f7;font-weight:800">FINISHER</div><div style="font-size:15px;font-weight:800;margin-top:2px">'+ts.f+' cost.</div></div><div class="pbox" style="border-top:3px solid #f97316"><div style="color:#f97316;font-weight:800">POSTURA 2</div><div style="font-size:15px;font-weight:800;margin-top:2px">'+ts.p+' cost.</div></div>';document.getElementById('c-fin').innerHTML='<div class="mcard"><div>Total Costales en Calle</div><div class="mval" style="color:#f59e0b">'+ts.b+' pzas</div></div><div class="mcard"><div>Valor en Consignación</div><div class="mval" style="color:#10b981">$'+ts.v.toFixed(0)+'</div></div>';var lg='';for(var j=0;j<S.cl.length;j++){var l=S.cl[j];lg+='<div class="irow" style="font-size:11px"><span><b>'+l.e+'</b>: '+l.m+'</span><span style="color:#94a3b8;font-size:10px">'+l.d+'</span></div>'}if(!S.cl.length)lg='<div style="text-align:center;color:#94a3b8;padding:10px">Sin movimientos aún.</div>';document.getElementById('c-log').innerHTML=lg}function addEst(){var el=document.getElementById('in-est'),n=(el.value||'').trim();if(!n){alert('Escribe el nombre del establecimiento');return}S.cs.push({n:n,s:0,g:0,f:0,p:0});el.value='';sv();renC()}function modC(idx,k,d){var x=S.cs[idx];if(x[k]+d<0)return;x[k]+=d;var now=new Date(),dt=now.toLocaleDateString('es-MX',{day:'2-digit',month:'short'})+' '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),fn=S.f[k].n,ac=d>0?'<b style="color:#10b981">+'+d+' '+fn+'</b> (Entregado)':'<b style="color:#3b82f6">'+d+' '+fn+'</b> (Vendido/Retirado)';S.cl.unshift({e:x.n,m:ac+' [Quedan '+x[k]+']',d:dt});if(S.cl.length>60)S.cl.pop();sv();renC()}function delEst(idx){if(confirm('¿Eliminar el establecimiento '+S.cs[idx].n+'?')){S.cs.splice(idx,1);sv();renC()}}function clrCL(){if(confirm('¿Limpiar bitácora de movimientos de consignación?')){S.cl=[];sv();renC()}}function perf(n){for(var i=0;i<S.i.length;i++)S.i[i].p=n?S.i[i].p1:S.i[i].p0;sv();ren()}function desc(){
-  var tKg = S.q.s + S.q.g + S.q.f + S.q.p;
+
+<nav>
+  <button id="n-prod" class="on" onclick="tab('prod')">⚖️ Lotes</button>
+  <button id="n-his" onclick="tab('his')">📜 Partidas</button>
+  <button id="n-inv" onclick="tab('inv')">📦 Bodega</button>
+  <button id="n-cfg" onclick="tab('cfg')">⚙️ Precios</button>
+</nav>
+
+<script>
+// URL OFICIAL DE CONEXIÓN CON APPS SCRIPT
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyx7WniBbhUzwB7nJnlt3r3Nz8LwQu_v8vHmDWK2hafZ3au7QBt54j2oD0BZ7eroWWF6A/exec';
+
+// DEFINICIÓN DE LAS 8 FASES (4 AVES + 4 PORCINOS)
+const D = {
+  m: 'b',
+  filter: 'all',
+  c: 3.50, // Costo empaque/costal estándar
+  f: {
+    // LÍNEA AVÍCOLA
+    'pol_s': { n: 'Starter Aves', esp: 'aves', b: 3.5, m: 6.5, v: 95, cl: '#3b82f6' },
+    'pol_g': { n: 'Grower Aves',  esp: 'aves', b: 3.0, m: 7.0, v: 80, cl: '#10b981' },
+    'pol_f': { n: 'Finisher Aves',esp: 'aves', b: 2.5, m: 7.5, v: 75, cl: '#a855f7' },
+    'pon_p': { n: 'Postura 2',    esp: 'aves', b: 3.4, m: 6.6, v: 85, cl: '#f97316' },
+    // LÍNEA PORCINA (Extraída de NECTAR_PORCINOS_FORMATO_HOMOLOGADO)
+    'por_i': { n: 'Porcino Inicio F1', esp: 'porc', b: 3.5, m: 6.5, v: 99, cl: '#ec4899' },
+    'por_c': { n: 'Porcino Crec. F2',  esp: 'porc', b: 2.5, m: 7.5, v: 80, cl: '#06b6d4' },
+    'por_d': { n: 'Porcino Des. F3',   esp: 'porc', b: 2.3, m: 7.7, v: 75, cl: '#8b5cf6' },
+    'por_f': { n: 'Porcino Fin. F4',   esp: 'porc', b: 2.0, m: 8.0, v: 70, cl: '#eab308' }
+  },
+  q: {
+    pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 0,
+    por_i: 0, por_c: 0, por_d: 0, por_f: 0
+  },
+  // INGREDIENTES CONSOLIDADOS CON SUS FÓRMULAS DE INCLUSIÓN (%)
+  i: [
+    { n: 'Pasta Soya', p: 11.00, st: 60.0, r: { pol_s: 71.1429, pol_g: 71.6667, pol_f: 68.6, pon_p: 64.1176, por_i: 76.3158, por_c: 82.7, por_d: 82.2826, por_f: 82.125 } },
+    { n: 'Camarón Mol.', p: 33.00, st: 6.5, r: { pol_s: 13.4286, pol_g: 10.0, pol_f: 4.0, pon_p: 0, por_i: 0, por_c: 0, por_d: 0, por_f: 0 } },
+    { n: 'E4 Salvado', p: 5.80, st: 2.0, r: { pol_s: 8.5714, pol_g: 10.0, pol_f: 12.0, pon_p: 0, por_i: 0, por_c: 0, por_d: 0, por_f: 0 } },
+    { n: 'Aceite Soya', p: 33.80, st: 10.0, r: { pol_s: 5.4286, pol_g: 6.5, pol_f: 11.0, pon_p: 2.9412, por_i: 5.0, por_c: 4.0, por_d: 2.1739, por_f: 0 } },
+    { n: 'Melaza Caña', p: 8.33, st: 15.0, r: { pol_s: 1.0, pol_g: 1.5, pol_f: 2.0, pon_p: 0, por_i: 5.2632, por_c: 1.0, por_d: 4.3478, por_f: 5.0 } },
+    { n: 'Ajo Polvo', p: 30.00, st: 1.45, r: { pol_s: 0.2857, pol_g: 0.3333, pol_f: 0.4, pon_p: 0, por_i: 0, por_c: 0, por_d: 0, por_f: 0 } },
+    { n: 'Calcio Fino', p: 7.00, st: 19.5, r: { pol_s: 0, pol_g: 0, pol_f: 2.0, pon_p: 10.8824, por_i: 0, por_c: 0, por_d: 0, por_f: 0 } },
+    { n: 'Calcio Grueso', p: 7.00, st: 0, r: { pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 16.1765, por_i: 0, por_c: 0, por_d: 0, por_f: 0 } },
+    { n: 'CAREMIX V20', p: 75.00, st: 0, r: { pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 5.8824, por_i: 0, por_c: 0, por_d: 0, por_f: 0 } },
+    { n: 'CAREMIX C 1530', p: 48.00, st: 0, r: { pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 0, por_i: 13.1579, por_c: 0, por_d: 0, por_f: 0 } },
+    { n: 'CAREMIX C 3060', p: 45.33, st: 0, r: { pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 0, por_i: 0, por_c: 12.0, por_d: 0, por_f: 0 } },
+    { n: 'CAREMIX C 6090', p: 40.80, st: 0, r: { pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 0, por_i: 0, por_c: 0, por_d: 10.8696, por_f: 0 } },
+    { n: 'CAREMIX C 90110', p: 42.00, st: 0, r: { pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 0, por_i: 0, por_c: 0, por_d: 0, por_f: 12.5 } },
+    { n: 'DELISARK', p: 200.00, st: 0, r: { pol_s: 0, pol_g: 0, pol_f: 0, pon_p: 0, por_i: 0.2632, por_c: 0.3, por_d: 0.3261, por_f: 0.375 } }
+  ],
+  e: { cn: 100 },
+  h: []
+};
+
+let S = JSON.parse(JSON.stringify(D));
+
+// Cargar almacenamiento local
+try {
+  let g = localStorage.getItem('nec_8fases_v1');
+  if (g) {
+    let P = JSON.parse(g);
+    if (P && P.f) {
+      S.h = P.h || [];
+      S.m = P.m || 'b';
+      S.filter = P.filter || 'all';
+      let oldByName = {};
+      (P.i || []).forEach(it => oldByName[it.n] = it);
+      S.i.forEach(it => {
+        let oi = oldByName[it.n];
+        if (oi && typeof oi.st === 'number') it.st = oi.st;
+        if (oi && typeof oi.p === 'number') it.p = oi.p;
+      });
+    }
+  }
+} catch (e) {}
+
+function sv() {
+  try { localStorage.setItem('nec_8fases_v1', JSON.stringify(S)); } catch (e) {}
+}
+
+function sModo(m) {
+  S.m = m;
+  document.getElementById('bm-b').className = m === 'b' ? 'on' : '';
+  document.getElementById('bm-k').className = m === 'k' ? 'on' : '';
+  ren();
+}
+
+function setFilter(flt) {
+  S.filter = flt;
+  document.getElementById('flt-all').className = flt === 'all' ? 'on' : '';
+  document.getElementById('flt-aves').className = flt === 'aves' ? 'on' : '';
+  document.getElementById('flt-porc').className = flt === 'porc' ? 'on' : '';
+  ren();
+}
+
+function step(k, d) {
+  let b = S.f[k].b;
+  if (S.m === 'b') {
+    let n = Math.max(0, Math.round(S.q[k] / b) + d);
+    S.q[k] = +(n * b).toFixed(2);
+  } else {
+    S.q[k] = Math.max(0, +(S.q[k] + d * 0.5).toFixed(2));
+  }
+  sv(); ren();
+}
+
+function inp(k, v) {
+  let x = parseFloat(v) || 0;
+  S.q[k] = S.m === 'b' ? +(x * S.f[k].b).toFixed(2) : x;
+  sv(); ren(true);
+}
+
+function zero() {
+  Object.keys(S.q).forEach(k => S.q[k] = 0);
+  sv(); ren();
+}
+
+function fw(w) {
+  return w <= 0.0001 ? '0' : w < 0.1 ? (w * 1000).toFixed(0) + 'g' : w.toFixed(2);
+}
+
+let curFin = { c: 0, v: 0, g: 0, bags: 0 };
+
+function ren(noBox) {
+  let allKeys = Object.keys(S.f);
+  let activeKeys = allKeys.filter(k => S.filter === 'all' || S.f[k].esp === S.filter);
+
+  // 1. Tarjetas de Lotes
+  if (!noBox) {
+    let hb = '';
+    activeKeys.forEach(k => {
+      let f = S.f[k];
+      let val = S.m === 'b' ? +(S.q[k] / f.b).toFixed(2) : S.q[k];
+      let nb = S.q[k] > 0 ? Math.ceil((S.q[k] - 0.001) / f.b) : 0;
+      hb += `
+        <div class="pbox" style="border-top:3px solid ${f.cl}">
+          <div style="font-weight:800;color:${f.cl}">${f.n.toUpperCase()}</div>
+          <div style="font-size:10px;color:#94a3b8">Bolsa: ${f.b.toFixed(2)} kg (+${f.m.toFixed(1)}kg maíz)</div>
+          <div class="step">
+            <button class="sbtn" onclick="step('${k}',-1)">-</button>
+            <input type="number" class="pinp" value="${val}" oninput="inp('${k}',this.value)">
+            <button class="sbtn" onclick="step('${k}',1)">+</button>
+          </div>
+          <div id="inf-${k}" style="font-size:10px;color:#f59e0b;font-weight:700">
+            ${S.q[k].toFixed(2)} kg (${nb} cost.)
+          </div>
+        </div>`;
+    });
+    document.getElementById('fases-box').innerHTML = hb;
+  } else {
+    activeKeys.forEach(k => {
+      let f = S.f[k];
+      let nb = S.q[k] > 0 ? Math.ceil((S.q[k] - 0.001) / f.b) : 0;
+      let el = document.getElementById('inf-' + k);
+      if (el) el.textContent = `${S.q[k].toFixed(2)} kg (${nb} cost.)`;
+    });
+  }
+
+  let tKg = allKeys.reduce((acc, k) => acc + (S.q[k] || 0), 0);
+  document.getElementById('tot-kg').textContent = `Total: ${tKg.toFixed(2)} kg`;
+
+  // 2. Encabezados de Tablas según filtro
+  let thP = `<tr><th>Insumo</th>` + activeKeys.map(k => `<th class="r" style="color:${S.f[k].cl}">${S.f[k].n.split(' ')[0]}</th>`).join('') + `<th class="r tcol">TOTAL</th><th class="r">Stock</th></tr>`;
+  document.getElementById('th-pesaje').innerHTML = thP;
+
+  let thC = `<tr><th>Insumo</th><th class="r">$/kg</th>` + activeKeys.map(k => `<th class="r" style="color:${S.f[k].cl}">${S.f[k].n.split(' ')[0]}</th>`).join('') + `<th class="r tcol">TOTAL</th></tr>`;
+  document.getElementById('th-costos').innerHTML = thC;
+
+  // 3. Filas de Pesaje y Costos
+  let hp = '', hc = '';
+  let costByPhase = {};
+  activeKeys.forEach(k => costByPhase[k] = 0);
+
+  S.i.forEach((it, idx) => {
+    let rVals = {};
+    let sumKg = 0;
+    activeKeys.forEach(k => {
+      let kg = (S.q[k] * (it.r[k] || 0)) / 100;
+      rVals[k] = kg;
+      sumKg += kg;
+      costByPhase[k] += kg * it.p;
+    });
+
+    if (sumKg > 0.0001 || tKg === 0) {
+      let fl = sumKg > it.st && sumKg > 0;
+      let bg = fl ? `<span class="wn">-${(sumKg - Math.max(0, it.st)).toFixed(1)}</span>` : `<span class="ok">${it.st.toFixed(1)}</span>`;
+      hp += `<tr><td><b>${it.n}</b></td>` + activeKeys.map(k => `<td class="r">${fw(rVals[k])}</td>`).join('') + `<td class="r tcol">${fw(sumKg)}</td><td class="r">${bg}</td></tr>`;
+
+      let sumC = sumKg * it.p;
+      hc += `<tr><td>${it.n}</td><td class="r">$${it.p.toFixed(2)}</td>` + activeKeys.map(k => `<td class="r">$${(rVals[k] * it.p).toFixed(2)}</td>`).join('') + `<td class="r tcol">$${sumC.toFixed(2)}</td></tr>`;
+    }
+  });
+
+  // Fila resumen de mezcla en pesaje
+  hp += `<tr class="trow"><td>MEZCLA</td>` + activeKeys.map(k => `<td class="r">${S.q[k].toFixed(1)}</td>`).join('') + `<td class="r tcol">${tKg.toFixed(2)}kg</td><td></td></tr>`;
+  document.getElementById('tb-pesaje').innerHTML = hp;
+
+  // Costo de empaques
+  let totalBags = 0;
+  let bagCostByPhase = {};
+  let saleByPhase = {};
+  let totalSale = 0;
+
+  activeKeys.forEach(k => {
+    let f = S.f[k];
+    let nb = S.q[k] > 0 ? Math.ceil((S.q[k] - 0.001) / f.b) : 0;
+    totalBags += nb;
+    bagCostByPhase[k] = nb * S.c;
+    let sale = (S.q[k] / f.b) * f.v;
+    saleByPhase[k] = sale;
+    totalSale += sale;
+  });
+
+  let totalCostMP = activeKeys.reduce((acc, k) => acc + costByPhase[k], 0);
+  let totalCostPack = totalBags * S.c;
+  let totalProductionCost = totalCostMP + totalCostPack;
+  let totalProfit = totalSale - totalProductionCost;
+
+  curFin = { c: totalProductionCost, v: totalSale, g: totalProfit, bags: totalBags };
+
+  hc += `<tr><td>Costales (${totalBags})</td><td class="r">$${S.c.toFixed(2)}</td>` + activeKeys.map(k => `<td class="r">$${bagCostByPhase[k].toFixed(2)}</td>`).join('') + `<td class="r tcol">$${totalCostPack.toFixed(2)}</td></tr>`;
+  hc += `<tr class="trow"><td colspan="2">COSTO LOTE</td>` + activeKeys.map(k => `<td class="r">$${(costByPhase[k] + bagCostByPhase[k]).toFixed(2)}</td>`).join('') + `<td class="r tcol">$${totalProductionCost.toFixed(2)}</td></tr>`;
+  hc += `<tr><td colspan="2" style="color:#3b82f6;font-weight:700">Venta</td>` + activeKeys.map(k => `<td class="r">$${saleByPhase[k].toFixed(0)}</td>`).join('') + `<td class="r tcol">$${totalSale.toFixed(2)}</td></tr>`;
+  hc += `<tr><td colspan="2" style="color:#10b981;font-weight:700">Ganancia</td>` + activeKeys.map(k => `<td class="r">+$${(saleByPhase[k] - (costByPhase[k] + bagCostByPhase[k])).toFixed(0)}</td>`).join('') + `<td class="r tcol">+$${totalProfit.toFixed(2)}</td></tr>`;
+  document.getElementById('tb-costos').innerHTML = hc;
+
+  document.getElementById('m-c').textContent = `$${totalProductionCost.toFixed(2)}`;
+  document.getElementById('m-v').textContent = `$${totalSale.toFixed(2)}`;
+  document.getElementById('m-g').textContent = `+$${totalProfit.toFixed(2)}`;
+  document.getElementById('m-b').textContent = `${totalBags} pzas`;
+
+  // Renderizar Bodega y Precios
+  renderBodegaAndPrices();
+  renH();
+}
+
+function renderBodegaAndPrices() {
+  let hmp = '', hpr = '';
+  S.i.forEach((it, idx) => {
+    hmp += `
+      <div class="irow">
+        <span>${it.n}</span>
+        <div><input type="number" step="0.1" class="ism" value="${it.st}" onchange="S.i[${idx}].st=parseFloat(this.value)||0;sv();ren()"> kg</div>
+      </div>`;
+    hpr += `
+      <div class="irow">
+        <span>${it.n}</span>
+        <div>$ <input type="number" step="0.05" class="ism" value="${it.p}" onchange="S.i[${idx}].p=parseFloat(this.value)||0;sv();ren()"> /kg</div>
+      </div>`;
+  });
+  hpr += `
+    <div class="irow">
+      <span style="color:#f59e0b">Costal Empaque</span>
+      <div>$ <input type="number" step="0.05" class="ism" value="${S.c}" onchange="S.c=parseFloat(this.value)||0;sv();ren()"> /pza</div>
+    </div>`;
+
+  document.getElementById('l-mp').innerHTML = hmp;
+  document.getElementById('l-pre').innerHTML = hpr;
+
+  document.getElementById('l-emp').innerHTML = `
+    <div class="irow">
+      <span>Costales disponibles</span>
+      <div><input type="number" class="ism" value="${S.e.cn}" onchange="S.e.cn=parseInt(this.value)||0;sv()"> pza</div>
+    </div>`;
+
+  let hv = '';
+  Object.keys(S.f).forEach(k => {
+    let f = S.f[k];
+    hv += `
+      <div class="irow">
+        <span style="color:${f.cl}"><b>${f.n}</b> (${f.b} kg)</span>
+        <div>$ <input type="number" class="ism" value="${f.v}" onchange="S.f['${k}'].v=parseFloat(this.value)||0;sv();ren()"></div>
+      </div>`;
+  });
+  document.getElementById('l-ven').innerHTML = hv;
+}
+
+function renH() {
+  if (!S.h) S.h = [];
+  let hl = '';
+  S.h.forEach((x, i) => {
+    let bgs = Object.keys(S.f).filter(k => (x.q[k] || 0) > 0).map(k => {
+      let nb = Math.ceil((x.q[k] - 0.001) / S.f[k].b);
+      return `<span class="hbg" style="color:${S.f[k].cl}">${S.f[k].n}: ${nb} cost (${x.q[k]}kg)</span>`;
+    }).join('');
+
+    hl += `
+      <div class="hcard">
+        <div class="htop">
+          <div>
+            <div style="font-weight:800;font-size:13px;color:#f59e0b">${x.nt}</div>
+            <div style="font-size:10px;color:#94a3b8">${x.dt}</div>
+          </div>
+          <button class="btn-sm" onclick="revH(${i})">↩ Revertir</button>
+        </div>
+        <div class="hbadges">${bgs}</div>
+        <div class="hfoot">
+          <span>Total: <b>${x.tKg.toFixed(1)} kg</b> (${x.bags} cost.)</span>
+          <span>Costo: <b style="color:#ef4444">$${x.c.toFixed(0)}</b> | Ganancia: <b style="color:#10b981">+$${x.u.toFixed(0)}</b></span>
+        </div>
+      </div>`;
+  });
+
+  if (!S.h.length) hl = '<div style="text-align:center;color:#94a3b8;padding:20px">Aún no hay partidas registradas.</div>';
+  document.getElementById('h-list').innerHTML = hl;
+  document.getElementById('h-cnt').textContent = `${S.h.length} partida${S.h.length === 1 ? '' : 's'}`;
+}
+
+// -------------------------------------------------------------
+// OPERACIÓN BIDIRECCIONAL: DESCONTAR / REGISTRAR
+// -------------------------------------------------------------
+function desc() {
+  let allKeys = Object.keys(S.f);
+  let tKg = allKeys.reduce((acc, k) => acc + (S.q[k] || 0), 0);
   if (tKg <= 0) {
     alert('Ingresa al menos 1 costal o kilo para registrar la partida.');
     return;
   }
-  
-  var descuentos = {};
-  for (var i = 0; i < S.i.length; i++) {
-    var it = S.i[i];
-    var u = (S.q.s * it.r.s + S.q.g * it.r.g + S.q.f * it.r.f + S.q.p * it.r.p) / 100;
-    it.st = +(it.st - u).toFixed(2);
-    if (u > 0.0001) {
-      descuentos[it.n] = +u.toFixed(2);
+
+  let descuentos = {};
+  S.i.forEach(it => {
+    let sumKg = 0;
+    allKeys.forEach(k => {
+      sumKg += (S.q[k] * (it.r[k] || 0)) / 100;
+    });
+    it.st = +(it.st - sumKg).toFixed(2);
+    if (sumKg > 0.0001) {
+      descuentos[it.n] = +sumKg.toFixed(2);
     }
-  }
-  
-  var bs = S.q.s > 0 ? Math.ceil((S.q.s - 0.001) / S.f.s.b) : 0;
-  var bg = S.q.g > 0 ? Math.ceil((S.q.g - 0.001) / S.f.g.b) : 0;
-  var bf = S.q.f > 0 ? Math.ceil((S.q.f - 0.001) / S.f.f.b) : 0;
-  var bp = S.q.p > 0 ? Math.ceil((S.q.p - 0.001) / S.f.p.b) : 0;
-  var totalCostales = bs + bg + bf + bp;
-  
-  S.e.cn -= totalCostales;
-  S.e.es -= bs;
-  S.e.eg -= bg;
-  S.e.ef -= bf;
-  S.e.ep -= bp;
-  
-  var ntEl = document.getElementById('in-nota');
-  var nt = (ntEl.value || '').trim() || 'Partida General';
-  var now = new Date();
-  var dt = now.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-  
-  if (!S.h) S.h = [];
-  var nuevaPartida = {
-    dt: dt, nt: nt,
-    qs: S.q.s, qg: S.q.g, qf: S.q.f, qp: S.q.p,
-    bs: bs, bg: bg, bf: bf, bp: bp,
-    tKg: tKg, c: curFin.c, v: curFin.v, u: curFin.g
-  };
-  S.h.unshift(nuevaPartida);
-  ntEl.value = '';
+  });
+
+  S.e.cn -= curFin.bags;
+  let nt = (document.getElementById('in-nota').value || '').trim() || 'Partida General';
+  let now = new Date();
+  let dt = now.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+
+  S.h.unshift({
+    dt, nt,
+    q: JSON.parse(JSON.stringify(S.q)),
+    tKg, c: curFin.c, v: curFin.v, u: curFin.g, bags: curFin.bags
+  });
+
+  document.getElementById('in-nota').value = '';
   sv();
   ren();
 
-  // Enviar a Google Sheets en segundo plano (igual que en nectar-pos)
-  var postUrl = S.sheetUrl || DEFAULT_APPS_SCRIPT_URL;
-  if (postUrl) {
-    fetch(postUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'descontar',
-        descuentos: descuentos,
-        partida: { dt: dt, nt: nt, tKg: tKg, costales: totalCostales, c: curFin.c, v: curFin.v, u: curFin.g }
-      })
-    }).catch(function(err) { console.error('Error enviando stock a Drive:', err); });
-  }
+  // Enviar descuento directo a Google Sheets en segundo plano
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'descontar', descuentos })
+  }).catch(e => console.error(e));
 
-  alert('✅ Partida guardada y descontada de bodega (sincronizada en Google Sheets).');
+  alert('✅ Partida registrada y descontada de bodega (sincronizada con Google Sheets).');
 }
 
-function revH(idx){
-  if (!confirm('¿Eliminar esta partida del historial y DEVOLVER los insumos y costales a la bodega?')) return;
-  var x = S.h[idx];
-  var devoluciones = {};
-  for (var i = 0; i < S.i.length; i++) {
-    var it = S.i[i];
-    var u = (x.qs * it.r.s + x.qg * it.r.g + x.qf * it.r.f + x.qp * it.r.p) / 100;
-    it.st = +(it.st + u).toFixed(2);
-    if (u > 0.0001) {
-      devoluciones[it.n] = +u.toFixed(2);
-    }
-  }
-  var totalCostales = x.bs + x.bg + x.bf + x.bp;
-  S.e.cn += totalCostales;
-  S.e.es += x.bs;
-  S.e.eg += x.bg;
-  S.e.ef += x.bf;
-  S.e.ep += x.bp;
-
+function revH(idx) {
+  if (!confirm('¿Revertir esta partida y devolver los insumos a bodega?')) return;
+  let x = S.h[idx];
+  let devoluciones = {};
+  S.i.forEach(it => {
+    let sumKg = 0;
+    Object.keys(S.f).forEach(k => {
+      sumKg += ((x.q[k] || 0) * (it.r[k] || 0)) / 100;
+    });
+    it.st = +(it.st + sumKg).toFixed(2);
+    if (sumKg > 0.0001) devoluciones[it.n] = +sumKg.toFixed(2);
+  });
+  S.e.cn += x.bags;
   S.h.splice(idx, 1);
   sv();
   ren();
 
-  // Enviar reversión a Google Sheets
-  var postUrl = S.sheetUrl || DEFAULT_APPS_SCRIPT_URL;
-  if (postUrl) {
-    fetch(postUrl, {
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'revertir', devoluciones })
+  }).catch(e => console.error(e));
+}
+
+function clrH() {
+  if (confirm('¿Vaciar todo el historial de partidas? (El stock actual no se modificará)')) {
+    S.h = []; sv(); ren();
+  }
+}
+
+function rst() {
+  if (confirm('¿Restaurar valores iniciales de fábrica?')) {
+    let hG = S.h || [];
+    S = JSON.parse(JSON.stringify(D));
+    S.h = hG;
+    sv(); ren();
+  }
+}
+
+function tab(t) {
+  ['prod', 'his', 'inv', 'cfg'].forEach(x => {
+    document.getElementById('t-' + x).className = x === t ? 'tab on' : 'tab';
+    document.getElementById('n-' + x).className = x === t ? 'on' : '';
+  });
+}
+
+// -------------------------------------------------------------
+// BOTÓN 1: IMPORTAR (DRIVE -> HTML)
+// -------------------------------------------------------------
+async function importFromSheets() {
+  let dot = document.getElementById('syncDot');
+  let txt = document.getElementById('syncTxt');
+  let tim = document.getElementById('syncTime');
+
+  dot.style.background = '#f59e0b';
+  txt.textContent = 'Descargando desde Drive...';
+
+  try {
+    let resp = await fetch(APPS_SCRIPT_URL + '?t=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    let json = await resp.json();
+    let upd = 0;
+
+    if (json.precios) {
+      for (let param in json.precios) {
+        let val = parseFloat(json.precios[param]);
+        if (!isNaN(val)) {
+          // Precios de venta
+          if (param.includes('starter')) { S.f.pol_s.v = val; upd++; }
+          else if (param.includes('grower')) { S.f.pol_g.v = val; upd++; }
+          else if (param.includes('finisher')) { S.f.pol_f.v = val; upd++; }
+          else if (param.includes('postura')) { S.f.pon_p.v = val; upd++; }
+          else if (param.includes('porcino_f1') || param.includes('inicio')) { S.f.por_i.v = val; upd++; }
+          else if (param.includes('porcino_f2') || param.includes('crecimiento')) { S.f.por_c.v = val; upd++; }
+          else if (param.includes('porcino_f3') || param.includes('desarrollo')) { S.f.por_d.v = val; upd++; }
+          else if (param.includes('porcino_f4') || param.includes('finalizacion')) { S.f.por_f.v = val; upd++; }
+          else if (param.includes('empaque')) { S.c = val; upd++; }
+          else {
+            S.i.forEach(it => {
+              let norm = it.n.toLowerCase().replace(/\s+/g, '_');
+              if (norm.includes(param) || param.includes(norm)) {
+                it.p = val; upd++;
+              }
+            });
+          }
+        }
+      }
+    }
+
+    if (json.stock) {
+      for (let insumo in json.stock) {
+        let kg = parseFloat(json.stock[insumo]);
+        if (!isNaN(kg)) {
+          S.i.forEach(it => {
+            if (it.n.toLowerCase().trim() === insumo.toLowerCase().trim()) {
+              it.st = kg;
+            }
+          });
+        }
+      }
+    }
+
+    dot.style.background = '#10b981';
+    txt.textContent = `Importado con éxito (${upd} precios)`;
+    tim.textContent = new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    sv();
+    ren();
+    alert('✅ Datos importados exitosamente desde Google Sheets.');
+  } catch (err) {
+    dot.style.background = '#ef4444';
+    txt.textContent = 'Error al importar de Drive';
+    console.error(err);
+    alert('❌ Error al conectar con Google Sheets. Revisa tu conexión.');
+  }
+}
+
+// -------------------------------------------------------------
+// BOTÓN 2: EXPORTAR (HTML -> DRIVE)
+// -------------------------------------------------------------
+async function exportToSheets() {
+  let dot = document.getElementById('syncDot');
+  let txt = document.getElementById('syncTxt');
+  let tim = document.getElementById('syncTime');
+
+  dot.style.background = '#3b82f6';
+  txt.textContent = 'Exportando hacia Drive...';
+
+  let stock_completo = {};
+  S.i.forEach(it => { stock_completo[it.n] = it.st; });
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        action: 'revertir',
-        devoluciones: devoluciones
+        action: 'actualizar_todo',
+        stock_completo: stock_completo
       })
-    }).catch(function(err) { console.error('Error revirtiendo stock en Drive:', err); });
-  }
-}
-function clrH(){if(confirm('¿Vaciar todo el historial de partidas? (El stock actual de bodega no se modificará)')){S.h=[];sv();ren()}}function rst(){if(confirm('¿Restaurar precios e inventario a los valores iniciales?')){var hG=S.h||[],cG=S.cs||[],lG=S.cl||[];S=JSON.parse(JSON.stringify(D));S.h=hG;S.cs=cG;S.cl=lG;sv();ren()}}function tab(t){var ts=['prod','his','con','inv','cfg'];for(var i=0;i<5;i++){document.getElementById('t-'+ts[i]).className=ts[i]==t?'tab on':'tab';document.getElementById('n-'+ts[i]).className=ts[i]==t?'on':''}}function dl(){var a=document.createElement('a'),b=new Blob(['<!DOCTYPE html>'+document.documentElement.outerHTML],{type:'text/html'});a.href=URL.createObjectURL(b);a.download='index.html';a.click()}
-var APPS_SCRIPT_URL = S.sheetUrl || DEFAULT_APPS_SCRIPT_URL;
+    });
 
-function saveSheetUrl(u){
-  S.sheetUrl = (u||'').trim();
-  APPS_SCRIPT_URL = S.sheetUrl;
-  sv();
-  if(S.sheetUrl) syncDrive();
-}
-
-async function syncDrive(){
-  var btnHead = document.getElementById('btn-sync-head');
-  if(btnHead) btnHead.classList.add('loading');
-
-  var dot = document.getElementById('syncDot');
-  var txt = document.getElementById('syncTxt');
-  var tim = document.getElementById('syncTime');
-  var url = S.sheetUrl || DEFAULT_APPS_SCRIPT_URL || (document.getElementById('in-sheet-url') ? document.getElementById('in-sheet-url').value.trim() : '');
-
-  if(!url){
-    if(dot) dot.style.background = '#94a3b8';
-    if(txt) txt.textContent = 'Sin enlace ingresado';
-    return;
-  }
-
-  if(dot) dot.style.background = '#f59e0b';
-  if(txt) txt.textContent = 'Sincronizando con Drive...';
-
-  try {
-    var fetchUrl = url + (url.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
-    var resp = await fetch(fetchUrl);
-    if(!resp.ok) throw new Error('Error HTTP: ' + resp.status);
-    
-    // Detect if response is JSON (Apps Script) or CSV
-    var contentType = resp.headers.get("content-type") || "";
-    var upd = 0;
-
-    if (contentType.indexOf("application/json") >= 0 || url.indexOf("/exec") >= 0) {
-      // PROCESAMIENTO APPS SCRIPT (JSON AUTOMÁTICO)
-      var json = await resp.json();
-      if (json && json.precios) {
-        for (var param in json.precios) {
-          var val = parseFloat(json.precios[param]);
-          if (!isNaN(val)) {
-            if (param === 'precio_venta_starter' || param === 'venta_starter') { S.f.s.v = val; upd++; }
-            else if (param === 'precio_venta_grower' || param === 'venta_grower') { S.f.g.v = val; upd++; }
-            else if (param === 'precio_venta_finisher' || param === 'venta_finisher') { S.f.f.v = val; upd++; }
-            else if (param === 'precio_venta_postura' || param === 'precio_venta_postura_2') { S.f.p.v = val; upd++; }
-            else if (param === 'costo_empaque' || param === 'empaque') { S.c = val; upd++; }
-            else {
-              for (var idx = 0; idx < S.i.length; idx++) {
-                var it = S.i[idx];
-                var normN = it.n.toLowerCase().replace(/\s+/g, '_');
-                if (normN.indexOf(param) >= 0 || param.indexOf(normN) >= 0) {
-                  it.p = val; upd++; break;
-                }
-              }
-            }
-          }
-        }
-      }
-      if (json && json.stock) {
-        for (var insumo in json.stock) {
-          for (var idx = 0; idx < S.i.length; idx++) {
-            if (S.i[idx].n.toLowerCase() === insumo.toLowerCase()) {
-              S.i[idx].st = parseFloat(json.stock[insumo]) || 0;
-              break;
-            }
-          }
-        }
-      }
-    } else {
-      // PROCESAMIENTO CSV
-      var csvText = await resp.text();
-      var lines = csvText.split(/\r?\n/);
-      lines.forEach(function(line){
-        var parts = line.split(',');
-        if(parts.length >= 2){
-          var param = parts[0].trim().toLowerCase().replace(/\s+/g,'_');
-          var val = parseFloat(parts[1].trim());
-          if(!isNaN(val)){
-            if(param==='precio_venta_starter'||param==='venta_starter'){S.f.s.v=val;upd++;}
-            else if(param==='precio_venta_grower'||param==='venta_grower'){S.f.g.v=val;upd++;}
-            else if(param==='precio_venta_finisher'||param==='venta_finisher'){S.f.f.v=val;upd++;}
-            else if(param==='precio_venta_postura'||param==='precio_venta_postura_2'){S.f.p.v=val;upd++;}
-            else if(param==='costo_empaque'||param==='empaque'){S.c=val;upd++;}
-            else{
-              for(var idx=0;idx<S.i.length;idx++){
-                var it=S.i[idx];
-                var normN=it.n.toLowerCase().replace(/\s+/g,'_');
-                if(normN.indexOf(param)>=0||param.indexOf(normN)>=0){
-                  it.p=val;upd++;break;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    if(dot) dot.style.background = '#10b981';
-    if(txt) txt.textContent = 'Sincronizado (' + upd + ' parámetros)';
-    if(tim) tim.textContent = new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-    sv();
-    ren();
-  } catch(e) {
-    if(dot) dot.style.background = '#ef4444';
-    if(txt) txt.textContent = 'Error al conectar con Drive';
-    console.error(e);
-  } finally {
-    if(btnHead) btnHead.classList.remove('loading');
+    dot.style.background = '#10b981';
+    txt.textContent = 'Exportado a Drive';
+    tim.textContent = new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    alert('✅ Inventario actual exportado y guardado en tu hoja de Google Sheets.');
+  } catch (err) {
+    dot.style.background = '#ef4444';
+    txt.textContent = 'Error al exportar a Drive';
+    console.error(err);
+    alert('❌ No se pudo exportar a Drive.');
   }
 }
 
+// Carga inicial
 ren();
-window.addEventListener('load', function(){
-  if(S.sheetUrl){
-    syncDrive();
-  }
+window.addEventListener('load', () => {
+  // Importar automáticamente al abrir la app
+  importFromSheets();
 });
-setTimeout(function(){if(document.getElementById('in-sheet-url'))document.getElementById('in-sheet-url').value=S.sheetUrl||DEFAULT_APPS_SCRIPT_URL;},200);</script>
-</body></html>
+</script>
+</body>
+</html>
